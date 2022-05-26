@@ -20,16 +20,12 @@ public class Kick extends AbstractCallback implements CallbackInterface {
     @Override
     public void callbackResponse() {
         if(!this.isCallable) {
-            // Auto message
+            // PERFORM  ACTION
         }
-
-        
     }
 
     @Override
     public void buildCallback() {
 
     }
-
-
 }
