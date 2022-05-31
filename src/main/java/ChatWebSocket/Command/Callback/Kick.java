@@ -1,8 +1,8 @@
-package Command.Callback;
+package ChatWebSocket.Command.Callback;
 
-import Command.AbstractCallback;
-import Command.CallbackInterface;
-import Command.CommandListener;
+import ChatWebSocket.Command.AbstractCallback;
+import ChatWebSocket.Command.CallbackInterface;
+import ChatWebSocket.Command.CommandListener;
 
 import java.util.ArrayList;
 

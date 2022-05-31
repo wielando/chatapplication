@@ -1,4 +1,4 @@
-package Command;
+package ChatWebSocket.Command;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

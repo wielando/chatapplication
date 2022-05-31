@@ -1,12 +1,9 @@
-package Command;
+package ChatWebSocket.Command;
 
-import Command.Callback.Info;
-import Command.Callback.Kick;
+import ChatWebSocket.Command.Callback.Info;
+import ChatWebSocket.Command.Callback.Kick;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class CommandList {
 

@@ -1,4 +1,4 @@
-package Encoder;
+package ChatWebSocket.Encoder;
 
 import jakarta.json.JsonObject;
 import jakarta.websocket.EncodeException;

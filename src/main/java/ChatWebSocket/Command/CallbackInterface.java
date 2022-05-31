@@ -1,4 +1,4 @@
-package Command;
+package ChatWebSocket.Command;
 
 public interface CallbackInterface {
 

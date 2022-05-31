@@ -1,4 +1,4 @@
-package Decoder;
+package ChatWebSocket.Decoder;
 
 import jakarta.json.Json;
 import jakarta.json.JsonException;

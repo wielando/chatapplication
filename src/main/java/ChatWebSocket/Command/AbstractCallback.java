@@ -1,4 +1,4 @@
-package Command;
+package ChatWebSocket.Command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
