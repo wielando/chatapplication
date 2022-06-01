@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class MessageRegistry {
 
-    HashMap<Integer, Class<?>> messages;
+    HashMap<Integer, Class<? extends MessageHandler>> messages;
 
     public MessageRegistry() {
         this.messages = new HashMap<>();
@@ -17,13 +17,14 @@ public class MessageRegistry {
     public void handleMessage(Integer header) throws Exception {
         try {
 
-            if(this.isRegistered(header)) {
-                Class<?> handlerClass = this.messages.get(header);
+            if (this.isRegistered(header)) {
+                Class<? extends MessageHandler> handlerClass = this.messages.get(header);
 
-                if(handlerClass == null) throw new Exception("Unknown message with header " + header);
+                if (handlerClass == null) throw new Exception("Unknown message with header " + header);
 
 
-                handlerClass.newInstance();
+                final MessageHandler handler = handlerClass.newInstance();
+
             }
 
         } catch (Exception e) {
@@ -35,12 +36,12 @@ public class MessageRegistry {
         return this.messages.containsKey(header);
     }
 
-    private void registerHandler(Integer header, Class<?> handler) {
-        if(header < 0) {
+    private void registerHandler(Integer header, Class<? extends MessageHandler> handler) {
+        if (header < 0) {
             return;
         }
 
-        if(messages.containsKey(header)) {
+        if (messages.containsKey(header)) {
             return;
         }
 

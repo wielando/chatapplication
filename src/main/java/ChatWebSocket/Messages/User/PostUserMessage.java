@@ -1,4 +1,10 @@
 package ChatWebSocket.Messages.User;
 
-public class PostUserMessage {
+import ChatWebSocket.Messages.MessageHandler;
+
+public class PostUserMessage extends MessageHandler {
+    @Override
+    public void handle() {
+
+    }
 }

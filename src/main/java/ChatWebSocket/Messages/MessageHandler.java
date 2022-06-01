@@ -1,11 +1,7 @@
 package ChatWebSocket.Messages;
 
-public class MessageHandler {
+public abstract class MessageHandler {
 
-    MessageRegistry messageRegistry = new MessageRegistry();
-
-    public void callMessageHandler(Integer header) {
-        
-    }
+    public abstract void handle();
 
 }
