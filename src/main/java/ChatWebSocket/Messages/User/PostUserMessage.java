@@ -1,2 +1,4 @@
-package ChatWebSocket.Messages.User;public class PostUserMessage {
+package ChatWebSocket.Messages.User;
+
+public class PostUserMessage {
 }
