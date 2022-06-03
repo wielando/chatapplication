@@ -24,6 +24,7 @@ public class MessageRegistry {
 
 
                 final MessageHandler handler = handlerClass.newInstance();
+                handler.handle();
 
             }
 

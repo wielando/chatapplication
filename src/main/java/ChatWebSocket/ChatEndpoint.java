@@ -1,5 +1,6 @@
 package ChatWebSocket;
 
+import ChatWebSocket.Messages.MessageRegistry;
 import jakarta.json.JsonObject;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
@@ -18,14 +19,12 @@ import java.util.Set;
 )
 public class ChatEndpoint {
     private static final Set<Session> sessions = new HashSet<>();
+    public final MessageRegistry registry = new MessageRegistry();
+
 
     @OnMessage
-    public void onMessage(JsonObject data, Session session) {
-
-
-
-
-        broadcast(data);
+    public void onMessage(JsonObject data, Session session) throws Exception {
+        registry.handleMessage(325);
     }
 
     private static void broadcast(JsonObject output) {
