@@ -2,6 +2,7 @@ package ChatWebSocket.Database;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 
 public class Database {
@@ -37,5 +38,9 @@ public class Database {
 
     public DatabasePool getDatabasePool() {
         return this.databasePool;
+    }
+
+    public HikariDataSource getDataSource() {
+        return this.dataSource;
     }
 }
