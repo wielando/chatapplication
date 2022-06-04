@@ -12,16 +12,10 @@ public class ClientInfoMapper extends DataMapper {
 
     private ResultSet executedStatement = null;
 
-    public ClientInfoMapper executeStatementWithParams(String statement, HashMap<String, Object> params) throws SQLException {
+    public ResultSet executeStatementWithParams(String statement, HashMap<String, Object> params) throws SQLException {
         PreparedStatement sqlStatement = this.buildStatementWithParams(statement, params);
 
-        this.executedStatement = sqlStatement.executeQuery();
-
-        return this;
-    }
-
-    public String getUsername() throws SQLException {
-        return this.executedStatement.getString("username");
+        return this.executedStatement = sqlStatement.executeQuery();
     }
 
 

@@ -1,9 +1,7 @@
 package ChatWebSocket.Client;
 
-import ChatWebSocket.Database.Mapper.ClientInfoMapper;
-
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 public class ClientInfo {
 
@@ -11,10 +9,8 @@ public class ClientInfo {
     private boolean online;
     private Integer id;
 
-    private ClientInfoMapper clientInfoMapper;
+    public ClientInfo(ResultSet set) {
 
-    public ClientInfo(ClientHandler App) throws SQLException {
-        this.clientInfoMapper = new ClientInfoMapper();
     }
 
     public void setOnline(boolean online) {
