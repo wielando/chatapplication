@@ -2,6 +2,9 @@ package ChatWebSocket.Client;
 
 import ChatWebSocket.Database.Mapper.ClientInfoMapper;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+
 public class ClientInfo {
 
     private String username;
@@ -10,9 +13,8 @@ public class ClientInfo {
 
     private ClientInfoMapper clientInfoMapper;
 
-    public ClientInfo(ClientHandler App) {
+    public ClientInfo(ClientHandler App) throws SQLException {
         this.clientInfoMapper = new ClientInfoMapper();
-
     }
 
     public void setOnline(boolean online) {

@@ -25,33 +25,35 @@ public abstract class DataMapper {
     }
 
     protected PreparedStatement buildStatementWithParams(String statement, HashMap<String, Object> params) throws SQLException {
-        Connection connection = this.database.getDataSource().getConnection();
-        PreparedStatement stmt = connection.prepareStatement(statement);
 
-        int i = 1;
+        try {
+            Connection connection = this.database.getDataSource().getConnection();
+            PreparedStatement stmt = connection.prepareStatement(statement);
 
-        for (Map.Entry<String, Object> set : params.entrySet()) {
+            int i = 1;
 
-            if (set.getValue().getClass() == String.class) {
-                stmt.setString(i, (String) set.getValue());
-            }
-            else if (set.getValue().getClass() == Integer.class) {
-                stmt.setInt(i, (Integer) set.getValue());
-            }
-            else if (set.getValue().getClass() == Double.class) {
-                stmt.setDouble(i, (Double) set.getValue());
-            }
-            else if (set.getValue().getClass() == Float.class) {
-                stmt.setFloat(i, (Float) set.getValue());
-            }
-            else if (set.getValue().getClass() == Long.class) {
-                stmt.setLong(i, (Long) set.getValue());
+            for (Map.Entry<String, Object> set : params.entrySet()) {
+
+                if (set.getValue().getClass() == String.class) {
+                    stmt.setString(i, (String) set.getValue());
+                } else if (set.getValue().getClass() == Integer.class) {
+                    stmt.setInt(i, (Integer) set.getValue());
+                } else if (set.getValue().getClass() == Double.class) {
+                    stmt.setDouble(i, (Double) set.getValue());
+                } else if (set.getValue().getClass() == Float.class) {
+                    stmt.setFloat(i, (Float) set.getValue());
+                } else if (set.getValue().getClass() == Long.class) {
+                    stmt.setLong(i, (Long) set.getValue());
+                }
+
+                i++;
             }
 
-            i++;
+            return stmt;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
-        return stmt;
     }
 
 }
