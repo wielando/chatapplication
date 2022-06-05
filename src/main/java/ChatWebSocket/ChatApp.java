@@ -17,14 +17,25 @@ import java.util.Set;
         encoders = {JSONTextEncoder.class},
         decoders = {JSONTextDecoder.class}
 )
-public class ChatEndpoint {
+public class ChatApp {
     private static final Set<Session> sessions = new HashSet<>();
-    public final MessageRegistry registry = new MessageRegistry();
-
+    private final MessageRegistry registry = new MessageRegistry();
 
     @OnMessage
     public void onMessage(JsonObject data, Session session) throws Exception {
         registry.handleMessage(325);
+    }
+
+    @OnOpen
+    public void onOpen(Session session) {
+        sessions.add(session);
+        System.out.println("Client has connected with ID: " + session.getId());
+    }
+
+    @OnClose
+    public void onClose(Session session) {
+        System.out.println("Client-ID " + session.getId() + " has disconnected");
+        sessions.remove(session);
     }
 
     private static void broadcast(JsonObject output) {
@@ -38,18 +49,6 @@ public class ChatEndpoint {
             }
         }
 
-    }
-
-    @OnOpen
-    public void onOpen(Session session) {
-        sessions.add(session);
-        System.out.println("Client has connected with ID: " + session.getId());
-    }
-
-    @OnClose
-    public void onClose(Session session) {
-        System.out.println("Client-ID " + session.getId() + " has disconnected");
-        sessions.remove(session);
     }
 }
 

@@ -1,4 +1,4 @@
-import ChatWebSocket.ChatEndpoint;
+import ChatWebSocket.ChatApp;
 import org.glassfish.tyrus.server.Server;
 
 
@@ -6,7 +6,7 @@ import org.glassfish.tyrus.server.Server;
 public class WebSocketServer {
 
     public static void main(String[] args) throws Exception {
-        Server server = new Server("localhost", 8025, "/websockets", null, ChatEndpoint.class);
+        Server server = new Server("localhost", 8025, "/websockets", null, ChatApp.class);
 
         try {
             server.start();
