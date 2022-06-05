@@ -1,5 +1,6 @@
 package ChatWebSocket.Messages;
 
+import ChatWebSocket.Client.Client;
 import ChatWebSocket.Messages.User.PostUserMessage;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class MessageRegistry {
         this.registerUserMessages();
     }
 
-    public void handleMessage(Integer header) throws Exception {
+    public void handleMessage(Client client, Integer header) throws Exception {
         try {
 
             if (this.isRegistered(header)) {
@@ -26,6 +27,7 @@ public class MessageRegistry {
                 final MessageHandler handler = handlerClass.newInstance();
                 handler.handle();
 
+                handler.client = client;
             }
 
         } catch (Exception e) {

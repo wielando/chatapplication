@@ -1,5 +1,6 @@
 package ChatWebSocket;
 
+import ChatWebSocket.Client.Client;
 import ChatWebSocket.Messages.MessageRegistry;
 import jakarta.json.JsonObject;
 import jakarta.websocket.*;
@@ -21,15 +22,40 @@ public class ChatApp {
     private static final Set<Session> sessions = new HashSet<>();
     private final MessageRegistry registry = new MessageRegistry();
 
+    private static Client client;
+
     @OnMessage
     public void onMessage(JsonObject data, Session session) throws Exception {
-        registry.handleMessage(325);
+
+        try {
+
+            if(!data.containsKey("token") && !data.containsKey("header")) {
+                session.close();
+                return;
+            }
+
+            if(Integer.parseInt(String.valueOf(data.get("header"))) == 0) {
+                session.close();
+                return;
+            }
+
+            Integer header = Integer.parseInt(String.valueOf(data.get("header")));
+
+            String SSOToken = String.valueOf(data.get("token"));
+            Client client = new Client(SSOToken);
+
+            registry.handleMessage(client, header);
+
+
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
     }
 
     @OnOpen
     public void onOpen(Session session) {
         sessions.add(session);
-        System.out.println("Client has connected with ID: " + session.getId());
+
     }
 
     @OnClose
