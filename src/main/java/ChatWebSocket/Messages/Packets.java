@@ -1,7 +1,6 @@
 package ChatWebSocket.Messages;
 
 public class Packets {
-
     public static final int PostUserMessage = 325;
 
     public static final int GetUserChat = 423;

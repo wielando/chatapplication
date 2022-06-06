@@ -16,12 +16,12 @@ public class Client {
     public Client(String token) throws SQLException {
         String dummyToken = "SLK2"; // only test purpose!
 
-        ResultSet client = this.getClient(dummyToken);
+        ResultSet client = this.loadClient(dummyToken);
         this.setClientInfo(client);
 
     }
 
-    public ResultSet getClient(String token) throws SQLException {
+    public ResultSet loadClient(String token) throws SQLException {
         try {
 
             String statement = "SELECT id, username, avatarUrl, online FROM users WHERE token = ?";
@@ -37,7 +37,10 @@ public class Client {
     public Client loadClientPartner(int id) throws SQLException {
 
         try {
-            if (id == this.clientInfo.getId()) {
+
+            Integer partnerId = id;
+
+            if (partnerId.equals(this.clientInfo.getId())) {
                 throw new Exception("Not allowed!");
             }
 
@@ -54,6 +57,8 @@ public class Client {
     }
 
     public void TextMessageToUser(Client client, String TextMessage) {
+
+
 
     }
 
