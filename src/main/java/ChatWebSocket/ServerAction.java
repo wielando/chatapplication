@@ -1,11 +1,14 @@
 package ChatWebSocket;
 
 import ChatWebSocket.Client.Client;
+import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Session;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -21,12 +24,41 @@ public class ServerAction {
         this.client = this.app.getClient();
     }
 
-    public void sendToClientPartner(JsonObject output, Client clientPartner) {
+    public void sendTextMessageToClientPartner(String textMessage, Client clientPartner) throws Exception {
         if (Objects.equals(clientPartner.getClientInfo().getId(), this.client.getClientInfo().getId())) {
             return;
         }
 
+        Session clientPartnerSession = this.app.getClientSessionsHashMap().get(clientPartner);
 
+        if (this.isSessionAvailable(clientPartnerSession)) {
+
+            JsonReader jsonReader = Json.createReader(new StringReader(textMessage));
+            JsonObject jsonObject = jsonReader.readObject();
+
+            this.broadcastToSession(clientPartnerSession, jsonObject);
+        }
+    }
+
+    private void broadcastToSession(Session session, JsonObject jsonObject) throws Exception {
+
+        if (!this.isSessionAvailable(session)) return;
+
+        try {
+            session.getBasicRemote().sendObject(jsonObject);
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
+    }
+
+    private boolean isSessionAvailable(Session session) {
+        Set<Session> availableSessions = this.app.getSessions();
+
+        if (availableSessions.contains(session)) {
+            return true;
+        }
+
+        return false;
     }
 
     public void broadcast(JsonObject output) {
