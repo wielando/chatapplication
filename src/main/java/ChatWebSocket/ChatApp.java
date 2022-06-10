@@ -24,8 +24,7 @@ public class ChatApp {
     private final HashMap<Client, Session> clientSessionsHashMap = new HashMap<>();
 
     private final MessageRegistry registry = new MessageRegistry();
-    private Client client;
-
+    private Client client = null;
     public static ServerAction serverAction;
 
 
@@ -45,6 +44,9 @@ public class ChatApp {
     @OnMessage
     public void onMessage(JsonObject data, Session session) throws Exception {
 
+        System.out.println("Client send message");
+        System.out.println(data.getString("header"));
+
         try {
 
             if (!data.containsKey("token") && !data.containsKey("header")) {
@@ -52,20 +54,26 @@ public class ChatApp {
                 return;
             }
 
-            if (Integer.parseInt(String.valueOf(data.get("header"))) == 0) {
+            if (Integer.parseInt(String.valueOf(data.getString("header"))) == 0) {
                 session.close();
                 return;
             }
 
-            Integer header = Integer.parseInt(String.valueOf(data.get("header")));
+            Integer header = Integer.parseInt(String.valueOf(data.getString("header")));
+            String SSOToken = String.valueOf(data.getString("token"));
 
-            String SSOToken = String.valueOf(data.get("token"));
-            this.client = new Client(SSOToken);
-            this.clientSessionsHashMap.put(this.client, session);
+            System.out.println(SSOToken);
+
+            if (this.client == null) {
+                this.client = new Client(SSOToken);
+                this.clientSessionsHashMap.put(this.client, session);
+
+                System.out.println("New Client with logged in with ID " + this.client.getClientInfo().getId());
+            }
 
             ChatApp.serverAction = new ServerAction(this);
-
             registry.handleMessage(this.client, header);
+
         } catch (Exception e) {
             throw new Exception(e);
         }
@@ -74,6 +82,7 @@ public class ChatApp {
     @OnOpen
     public void onOpen(Session session) {
         sessions.add(session);
+        System.out.println("Session connected");
     }
 
     @OnClose

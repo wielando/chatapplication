@@ -1,6 +1,8 @@
 package ChatWebSocket.Client;
 
+import ChatWebSocket.ChatApp;
 import ChatWebSocket.Database.Mapper.ClientInfoMapper;
+import ChatWebSocket.ServerAction;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +14,8 @@ public class Client {
     private ClientInfo clientInfo;
 
     private ClientInfoMapper clientInfoMapper = new ClientInfoMapper();
+
+    private final ServerAction serverAction = ChatApp.serverAction;
 
     public Client(String token) throws SQLException {
         String dummyToken = "SLK2"; // only test purpose!
@@ -56,10 +60,8 @@ public class Client {
         }
     }
 
-    public void TextMessageToUser(Client client, String TextMessage) {
-
-
-
+    public void TextMessageToUser(Client clientPartner, String textMessage) throws Exception {
+        this.serverAction.sendTextMessageToClientPartner(textMessage, clientPartner);
     }
 
     public void LikeTextMessage(Client client, int messageId) {
