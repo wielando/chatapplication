@@ -3,6 +3,8 @@ package ChatWebSocket.Database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.sql.SQLException;
+
 public class DatabasePool {
 
     private HikariDataSource database;

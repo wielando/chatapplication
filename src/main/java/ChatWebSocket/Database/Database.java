@@ -2,8 +2,7 @@ package ChatWebSocket.Database;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class Database {
 
@@ -23,6 +22,8 @@ public class Database {
                 return;
             }
 
+            this.dataSource = this.databasePool.getDatabase();
+
         } catch (Exception e) {
             System.out.println("Failed to establish a MySQL Connection. Critical error - system shutdown!");
             SQLException = true;
@@ -36,11 +37,20 @@ public class Database {
 
     }
 
+    public HikariDataSource getDataSource() {
+        return this.dataSource;
+    }
+
     public DatabasePool getDatabasePool() {
         return this.databasePool;
     }
 
-    public HikariDataSource getDataSource() {
-        return this.dataSource;
+    public void dispose() throws SQLException {
+        if (this.databasePool != null) {
+            this.databasePool.getDatabase().close();
+        }
+
+        this.dataSource.close();
     }
+
 }

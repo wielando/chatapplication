@@ -45,7 +45,6 @@ public class ChatApp {
     public void onMessage(JsonObject data, Session session) throws Exception {
 
         System.out.println("Client send message");
-        System.out.println(data.getString("header"));
 
         try {
 

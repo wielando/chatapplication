@@ -11,10 +11,14 @@ public class ClientInfo {
     private String avatarUrl;
 
     public ClientInfo(ResultSet set) throws SQLException {
-        this.setOnline(set.getInt("online"));
-        this.setUsername(set.getString("username"));
-        this.setId(set.getInt("id"));
-        this.setAvatarUrl(set.getString("avatarUrl"));
+        try {
+            this.setOnline(set.getInt("online"));
+            this.setUsername(set.getString("username"));
+            this.setId(set.getInt("id"));
+            this.setAvatarUrl(set.getString("avatarUrl"));
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
     }
 
     public void setId(int id) {
