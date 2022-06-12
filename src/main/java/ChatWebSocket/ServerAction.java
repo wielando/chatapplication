@@ -32,9 +32,6 @@ public class ServerAction {
 
         if (this.isSessionAvailable(clientPartnerSession)) {
 
-            /*JsonReader jsonReader = Json.createReader(new StringReader(textMessage));
-            JsonObject jsonObject = jsonReader.readObject();*/
-
             JSONObject textMessageObject = new JSONObject();
             textMessageObject.put("textMessage", textMessage);
 
@@ -42,21 +39,10 @@ public class ServerAction {
         }
     }
 
-    public void sendClientFriendList(HashMap<String, HashMap<String, String>> friendList, Client client) throws Exception {
+    public void sendMessageToClient(JSONObject jsonObject, Client client) throws Exception {
         Session clientSession = this.app.getClientSessionsHashMap().get(client);
 
         if (this.isSessionAvailable(clientSession)) {
-
-            JSONObject userData = new JSONObject();
-            JSONObject jsonObject = new JSONObject();
-
-            for (Map.Entry<String, HashMap<String, String>> friend : friendList.entrySet()) {
-                userData.put("avatarUrl", friend.getValue().get("avatarUrl"));
-                userData.put("online", friend.getValue().get("online"));
-
-                jsonObject.put(friend.getKey(), userData);
-            }
-
             this.broadcastToSession(clientSession, jsonObject);
         }
     }
