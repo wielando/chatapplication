@@ -7,13 +7,13 @@ import java.util.HashMap;
 
 public class GetUserChatChannels extends MessageHandler {
     @Override
-    public void handle() {
+    public void handle() throws Exception {
         this.client.loadClientFriendList();
 
         HashMap<String, HashMap<String, String>> friendList = this.client.getClientInfo().getClientChatPartnerList();
 
         if (friendList != null) {
-            this.client.getServerAction().initialFriendListToClient(friendList, this.client);
+            this.client.getServerAction().sendClientFriendList(friendList, this.client);
         }
     }
 }
