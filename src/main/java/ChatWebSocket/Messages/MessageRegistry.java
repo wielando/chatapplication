@@ -1,7 +1,9 @@
 package ChatWebSocket.Messages;
 
 import ChatWebSocket.Client.Client;
+import ChatWebSocket.Messages.User.GetUserChatChannels;
 import ChatWebSocket.Messages.User.PostUserMessage;
+import jakarta.json.JsonObject;
 
 import java.util.HashMap;
 
@@ -13,9 +15,10 @@ public class MessageRegistry {
         this.messages = new HashMap<>();
 
         this.registerUserMessages();
+        this.registerInitialMessages();
     }
 
-    public void handleMessage(Client client, Integer header) throws Exception {
+    public void handleMessage(Client client, Integer header, JsonObject messageData) throws Exception {
         try {
 
             if (this.isRegistered(header)) {
@@ -25,9 +28,14 @@ public class MessageRegistry {
 
 
                 final MessageHandler handler = handlerClass.newInstance();
-                handler.handle();
+
+                ClientMessage clientMessage = new ClientMessage();
+                clientMessage.addClientMessage(messageData);
 
                 handler.client = client;
+                handler.clientMessage = clientMessage;
+
+                handler.handle();
             }
 
         } catch (Exception e) {
@@ -49,6 +57,10 @@ public class MessageRegistry {
         }
 
         this.messages.putIfAbsent(header, handler);
+    }
+
+    private void registerInitialMessages() {
+        this.registerHandler(Packets.GetUserChatChannels, GetUserChatChannels.class);
     }
 
     private void registerUserMessages() {

@@ -32,9 +32,6 @@ public class Database {
                 System.exit(0);
             }
         }
-
-        System.out.println("Database Connected!");
-
     }
 
     public HikariDataSource getDataSource() {

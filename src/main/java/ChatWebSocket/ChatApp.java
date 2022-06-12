@@ -25,13 +25,12 @@ public class ChatApp {
 
     private final MessageRegistry registry = new MessageRegistry();
     private Client client = null;
-    public static ServerAction serverAction;
+    private static ServerAction serverAction;
 
 
     public Set<Session> getSessions() {
         return ChatApp.sessions;
     }
-
 
     public Client getClient() {
         return this.client;
@@ -43,8 +42,6 @@ public class ChatApp {
 
     @OnMessage
     public void onMessage(JsonObject data, Session session) throws Exception {
-
-        System.out.println("Client send message");
 
         try {
 
@@ -71,11 +68,15 @@ public class ChatApp {
             }
 
             ChatApp.serverAction = new ServerAction(this);
-            registry.handleMessage(this.client, header);
+            registry.handleMessage(this.client, header, data);
 
         } catch (Exception e) {
             throw new Exception(e);
         }
+    }
+
+    public static ServerAction getServerAction() {
+        return ChatApp.serverAction;
     }
 
     @OnOpen

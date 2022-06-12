@@ -2,6 +2,9 @@ package ChatWebSocket.Client;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ClientInfo {
 
@@ -9,6 +12,8 @@ public class ClientInfo {
     private int online;
     private Integer id;
     private String avatarUrl;
+
+    private HashMap<String, HashMap<String, String>> partnerList;
 
     public ClientInfo(ResultSet set) throws SQLException {
         try {
@@ -20,6 +25,15 @@ public class ClientInfo {
             throw new SQLException(e);
         }
     }
+
+    public HashMap<String, HashMap<String, String>> getClientChatPartnerList() {
+        return this.partnerList;
+    }
+
+    public void setPartnerList(HashMap<String, HashMap<String, String>> friendList) throws SQLException {
+        this.partnerList = friendList;
+    }
+
 
     public void setId(int id) {
         this.id = id;

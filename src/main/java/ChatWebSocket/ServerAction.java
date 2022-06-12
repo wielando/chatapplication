@@ -9,6 +9,7 @@ import jakarta.websocket.Session;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -37,6 +38,14 @@ public class ServerAction {
             JsonObject jsonObject = jsonReader.readObject();
 
             this.broadcastToSession(clientPartnerSession, jsonObject);
+        }
+    }
+
+    public void initialFriendListToClient(HashMap<String, HashMap<String, String>> friendList, Client client) {
+        Session clientSession = this.app.getClientSessionsHashMap().get(client);
+
+        if (this.isSessionAvailable(clientSession)) {
+
         }
     }
 

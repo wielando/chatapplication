@@ -4,7 +4,8 @@ import ChatWebSocket.Client.Client;
 
 public abstract class MessageHandler {
 
-    protected Client client;
+    public Client client;
+    public ClientMessage clientMessage;
 
     public abstract void handle();
 }
