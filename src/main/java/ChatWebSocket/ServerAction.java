@@ -6,13 +6,11 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Session;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class ServerAction {
 
@@ -46,6 +44,17 @@ public class ServerAction {
 
         if (this.isSessionAvailable(clientSession)) {
 
+            JSONObject userData = new JSONObject();
+            JSONObject jsonObject = new JSONObject();
+
+            for (Map.Entry<String, HashMap<String, String>> friend : friendList.entrySet()) {
+                userData.put("avatarUrl", friend.getValue().get("avatarUrl"));
+                userData.put("online", friend.getValue().get("online"));
+
+                jsonObject.put(friend.getKey(), userData);
+            }
+
+            String jsonString = jsonObject.toString();
         }
     }
 

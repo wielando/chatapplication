@@ -13,7 +13,6 @@ import java.util.List;
 public class Client {
 
     private ClientInfo clientInfo;
-
     private final ServerAction serverAction;
 
     public Client(String token) throws SQLException {
@@ -21,7 +20,6 @@ public class Client {
         this.serverAction = ChatApp.getServerAction();
 
         this.clientInfo = this.loadClientInfo(token);
-        this.loadClientPartnerList();
     }
 
     private ClientInfo loadClientInfo(String token) throws SQLException {
@@ -50,7 +48,7 @@ public class Client {
         return null;
     }
 
-    private void loadClientPartnerList() {
+    public void loadClientFriendList() {
 
         if (this.getClientInfo().getClientChatPartnerList() != null) {
             return;

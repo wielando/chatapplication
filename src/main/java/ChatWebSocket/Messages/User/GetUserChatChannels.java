@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class GetUserChatChannels extends MessageHandler {
     @Override
     public void handle() {
+        this.client.loadClientFriendList();
 
         HashMap<String, HashMap<String, String>> friendList = this.client.getClientInfo().getClientChatPartnerList();
 

@@ -55,10 +55,10 @@ public class ChatApp {
                 return;
             }
 
+            serverAction = new ServerAction(this);
+
             Integer header = Integer.parseInt(String.valueOf(data.getString("header")));
             String SSOToken = String.valueOf(data.getString("token"));
-
-            System.out.println(SSOToken);
 
             if (this.client == null) {
                 this.client = new Client(SSOToken);
@@ -67,7 +67,6 @@ public class ChatApp {
                 System.out.println("New Client with logged in with ID " + this.client.getClientInfo().getId());
             }
 
-            ChatApp.serverAction = new ServerAction(this);
             registry.handleMessage(this.client, header, data);
 
         } catch (Exception e) {
@@ -76,7 +75,7 @@ public class ChatApp {
     }
 
     public static ServerAction getServerAction() {
-        return ChatApp.serverAction;
+        return serverAction;
     }
 
     @OnOpen
