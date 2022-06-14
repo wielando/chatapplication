@@ -9,6 +9,7 @@ public class SingleChatRoom extends SingleChatRoomFactory {
     private final Database connection = new Database();
 
     protected SingleChatRoom() {
+        super();
 
     }
 }

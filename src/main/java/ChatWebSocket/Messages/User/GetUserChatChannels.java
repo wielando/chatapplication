@@ -1,6 +1,5 @@
 package ChatWebSocket.Messages.User;
 
-import ChatWebSocket.Chat.SingleChatRoomFactory;
 import ChatWebSocket.ChatApp;
 import ChatWebSocket.Messages.MessageHandler;
 import org.json.JSONObject;

@@ -14,20 +14,26 @@ public class SingleChatRoomFactory {
 
     HashMap<Session, Client> clientPartners = new HashMap<>();
 
+    protected SingleChatRoomFactory() {
+    }
+
     public static SingleChatRoomFactory createSingleChatRoomFactory(Client client) {
         SingleChatRoomFactory factory = new SingleChatRoomFactory();
 
-        return factory.buildFactoryConfiguration();
+        return factory.buildFactoryConfiguration(client);
     }
 
-    private SingleChatRoomFactory buildFactoryConfiguration() {
+    private SingleChatRoomFactory buildFactoryConfiguration(Client client) {
+
+        this.client = client;
+        this.setClientPartners();
 
         return new SingleChatRoomFactory();
     }
 
-    private SingleChatRoom createSingleChatRoom(Client clientPartner) {
+    public SingleChatRoom createSingleChatRoom(Client clientPartner) {
 
-        if(!isCreateable) return null;
+        if (!isCreateable) return null;
 
         return new SingleChatRoom();
     }
@@ -39,6 +45,10 @@ public class SingleChatRoomFactory {
     }
 
     private void setClientPartners() {
+        HashMap<String, HashMap<String, String>> partnerList = this.client.getClientInfo().getClientChatPartnerList();
+
+        if(partnerList.isEmpty()) return;
+
 
     }
 
