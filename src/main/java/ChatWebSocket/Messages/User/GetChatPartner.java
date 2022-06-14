@@ -1,6 +1,7 @@
 package ChatWebSocket.Messages.User;
 
 import ChatWebSocket.Chat.SingleChatRoom;
+import ChatWebSocket.Chat.SingleChatRoomFactory;
 import ChatWebSocket.Client.Client;
 import ChatWebSocket.Messages.MessageHandler;
 
@@ -16,8 +17,6 @@ public class GetChatPartner extends MessageHandler {
 
             if (partnerClient == null) return;
 
-            SingleChatRoom singleChatRoom = new SingleChatRoom();
-            singleChatRoom.createChatRoom(this.client, partnerClient);
         }
 
     }
