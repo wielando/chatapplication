@@ -19,16 +19,16 @@ import java.util.Set;
         decoders = {JSONTextDecoder.class}
 )
 public class ChatApp {
-    private static final Set<Session> sessions = new HashSet<>();
+    private static final Set<AppSession> sessions = new HashSet<>();
 
-    private final HashMap<Client, Session> clientSessionsHashMap = new HashMap<>();
+    public static final HashMap<Client, AppSession> clientSessionsHashMap = new HashMap<>();
 
     private final MessageRegistry registry = new MessageRegistry();
     private Client client = null;
     private static ServerAction serverAction;
 
 
-    public Set<Session> getSessions() {
+    public Set<AppSession> getSessions() {
         return ChatApp.sessions;
     }
 
@@ -36,12 +36,12 @@ public class ChatApp {
         return this.client;
     }
 
-    public HashMap<Client, Session> getClientSessionsHashMap() {
-        return this.clientSessionsHashMap;
+    public static HashMap<Client, AppSession> getClientSessionsHashMap() {
+        return ChatApp.clientSessionsHashMap;
     }
 
     @OnMessage
-    public void onMessage(JsonObject data, Session session) throws Exception {
+    public void onMessage(JsonObject data, AppSession session) throws Exception {
 
         try {
 
@@ -78,16 +78,5 @@ public class ChatApp {
         return serverAction;
     }
 
-    @OnOpen
-    public void onOpen(Session session) {
-        sessions.add(session);
-        System.out.println("Session connected");
-    }
-
-    @OnClose
-    public void onClose(Session session) {
-        System.out.println("Client-ID " + session.getId() + " has disconnected");
-        sessions.remove(session);
-    }
 }
 

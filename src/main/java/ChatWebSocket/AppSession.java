@@ -1,25 +1,26 @@
 package ChatWebSocket;
 
 import ChatWebSocket.Client.Client;
+import jakarta.websocket.Session;
 
 import java.util.HashMap;
 
-public class Session {
+public class AppSession {
 
     private static Session currentSession;
 
     private static final HashMap<Integer, HashMap<Client, Session>> clientSessionsHashMap = new HashMap<>();
 
-    private Session(App app, Session currentSession) {
+    private AppSession(App app, Session currentSession) {
         this.setCurrentSession(currentSession);
     }
 
-    public static Session initSession(App app, Session currentSession) {
-        return new Session(app, currentSession);
+    public static AppSession initSession(App app, Session currentSession) {
+        return new AppSession(app, currentSession);
     }
 
     private void setCurrentSession(Session currentSession) {
-        Session.currentSession = currentSession;
+        AppSession.currentSession = currentSession;
     }
 
     public void addClientSessionsHashMap(Session session, Client client) {
@@ -27,15 +28,15 @@ public class Session {
         HashMap<Client, Session> clientSessionHashMap = new HashMap<>();
         clientSessionHashMap.put(client, session);
 
-        Session.clientSessionsHashMap.put(clientId, clientSessionHashMap);
+        AppSession.clientSessionsHashMap.put(clientId, clientSessionHashMap);
     }
 
     public HashMap<Client, Session> getClientSession(Integer clientId) throws Exception {
 
         try {
-            if (!Session.clientSessionsHashMap.containsKey(clientId)) throw new Exception();
+            if (!AppSession.clientSessionsHashMap.containsKey(clientId)) throw new Exception();
 
-            return Session.clientSessionsHashMap.get(clientId);
+            return AppSession.clientSessionsHashMap.get(clientId);
         } catch (Exception e) {
             throw new Exception(e);
         }

@@ -1,9 +1,11 @@
 package ChatWebSocket.Chat;
 
+import ChatWebSocket.ChatApp;
 import ChatWebSocket.Client.Client;
 import jakarta.jms.Session;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SingleChatRoomFactory {
 
@@ -48,7 +50,6 @@ public class SingleChatRoomFactory {
         HashMap<String, HashMap<String, String>> partnerList = this.client.getClientInfo().getClientChatPartnerList();
 
         if(partnerList.isEmpty()) return;
-
 
     }
 
