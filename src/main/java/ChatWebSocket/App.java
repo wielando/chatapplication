@@ -1,38 +1,42 @@
 package ChatWebSocket;
 
-import ChatWebSocket.Decoder.JSONTextDecoder;
-import ChatWebSocket.Encoder.JSONTextEncoder;
-import jakarta.json.JsonObject;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
+import ChatWebSocket.Client.Client;
 import jakarta.websocket.Session;
-import jakarta.websocket.server.ServerEndpoint;
 
-@ServerEndpoint(
-        value = "/start",
-        encoders = {JSONTextEncoder.class},
-        decoders = {JSONTextDecoder.class}
-)
 public class App {
-
     private AppSession appSession = null;
+    private ServerAction serverAction = null;
+    private static Client currentClient = null;
 
-    @OnMessage
-    public void onMessage(JsonObject data, Session session) throws Exception {
-
+    public App(EntryPoint entryPoint) {
+        this.appSession = AppSession.initAppSession(this);
+        this.serverAction = new ServerAction(this);
     }
 
-    @OnOpen
-    public void onOpen(Session session) {
-        this.appSession = AppSession.initSession(this, session);
+    public ServerAction getServerAction() {
+        return this.serverAction;
     }
 
-    @OnClose
-    public void onClose(Session session) {
-
+    public AppSession getAppSession() {
+        return this.appSession;
     }
 
-    public getSession
+    public Client getCurrentClient() {
+        if (App.currentClient == null) return null;
 
+        return App.currentClient;
+    }
+
+    public void setCurrentClient(String SSOToken, Session clientSession) throws Exception {
+        try {
+
+            if (App.currentClient != null) throw new Exception("Client is already loaded!");
+
+            App.currentClient = new Client(SSOToken);
+            this.getAppSession().addClientSessionsHashMap(clientSession, this.getCurrentClient());
+
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
+    }
 }

@@ -7,19 +7,20 @@ import java.util.HashMap;
 
 public class AppSession {
 
-    private static Session currentSession;
+    private static Session currentSession = null;
 
     private static final HashMap<Integer, HashMap<Client, Session>> clientSessionsHashMap = new HashMap<>();
 
-    private AppSession(App app, Session currentSession) {
-        this.setCurrentSession(currentSession);
+    private AppSession(App app) {
     }
 
-    public static AppSession initSession(App app, Session currentSession) {
-        return new AppSession(app, currentSession);
+    public static AppSession initAppSession(App app) {
+        return new AppSession(app);
     }
 
-    private void setCurrentSession(Session currentSession) {
+    public void setCurrentSession(Session currentSession) {
+        if(AppSession.currentSession != null) return;
+
         AppSession.currentSession = currentSession;
     }
 

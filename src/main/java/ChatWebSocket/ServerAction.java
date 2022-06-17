@@ -15,10 +15,10 @@ import java.util.*;
 public class ServerAction {
 
     private final Client client;
-    private final ChatApp app;
+    private final App app;
 
-    public ServerAction(ChatApp chatApp) {
-        this.app = chatApp;
+    public ServerAction(App app) {
+        this.app = app;
 
         this.client = this.app.getClient();
     }

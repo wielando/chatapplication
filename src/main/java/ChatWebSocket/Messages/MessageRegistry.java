@@ -1,5 +1,6 @@
 package ChatWebSocket.Messages;
 
+import ChatWebSocket.App;
 import ChatWebSocket.Client.Client;
 import ChatWebSocket.Messages.User.GetUserChatChannels;
 import ChatWebSocket.Messages.User.PostUserMessage;
@@ -18,7 +19,7 @@ public class MessageRegistry {
         this.registerInitialMessages();
     }
 
-    public void handleMessage(Client client, Integer header, JsonObject messageData) throws Exception {
+    public void handleMessage(Client client, Integer header, JsonObject messageData, App app) throws Exception {
         try {
 
             if (this.isRegistered(header)) {
@@ -34,6 +35,7 @@ public class MessageRegistry {
 
                 handler.client = client;
                 handler.clientMessage = clientMessage;
+                handler.app = app;
 
                 handler.handle();
             }

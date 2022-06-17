@@ -13,11 +13,9 @@ import java.util.List;
 public class Client {
 
     private ClientInfo clientInfo;
-    private final ServerAction serverAction;
 
     public Client(String token) throws SQLException {
         String dummyToken = "SLK2"; // only test purpose!
-        this.serverAction = ChatApp.getServerAction();
 
         this.clientInfo = this.loadClientInfo(token);
     }
