@@ -89,6 +89,7 @@ public class Client {
 
                     friendList.put(set.getString("username"), new HashMap<>());
 
+                    friendList.get(set.getString("username")).put("id", set.getString("id"));
                     friendList.get(set.getString("username")).put("avatarUrl", set.getString("avatarUrl"));
                     friendList.get(set.getString("username")).put("online", set.getString("online"));
                 }

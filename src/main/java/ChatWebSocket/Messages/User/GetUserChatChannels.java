@@ -1,6 +1,5 @@
 package ChatWebSocket.Messages.User;
 
-import ChatWebSocket.ChatApp;
 import ChatWebSocket.Messages.MessageHandler;
 import org.json.JSONObject;
 
@@ -26,7 +25,7 @@ public class GetUserChatChannels extends MessageHandler {
                 jsonObject.put(friend.getKey(), userData);
             }
 
-            this.client.getServerAction().sendMessageToClient(jsonObject, this.client);
+            this.app.getServerAction().sendMessageToClient(jsonObject, this.client);
         }
     }
 }

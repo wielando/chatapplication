@@ -31,7 +31,7 @@ public class ServerAction {
         Integer partnerId = clientPartner.getClientInfo().getId();
         Session clientPartnerSession = this.app.getAppSession().getClientSession(partnerId).get(clientPartner);
 
-        if (this.isSessionAvailable(clientPartnerSession)) {
+        if (this.app.getAppSession().isSessionAvailable(clientPartnerSession)) {
 
             JSONObject textMessageObject = new JSONObject();
             textMessageObject.put("textMessage", textMessage);
@@ -43,30 +43,20 @@ public class ServerAction {
     public void sendMessageToClient(JSONObject jsonObject, Client client) throws Exception {
         Session clientSession = this.app.getAppSession().getClientSession(client.getClientInfo().getId()).get(client);
 
-        if (this.isSessionAvailable(clientSession)) {
+        if (this.app.getAppSession().isSessionAvailable(clientSession)) {
             this.broadcastToSession(clientSession, jsonObject);
         }
     }
 
     private void broadcastToSession(Session session, JSONObject jsonObject) throws Exception {
 
-        if (!this.isSessionAvailable(session)) return;
+        if (!this.app.getAppSession().isSessionAvailable(session)) return;
 
         try {
             session.getBasicRemote().sendObject(jsonObject);
         } catch (Exception e) {
             throw new Exception(e);
         }
-    }
-
-    private boolean isSessionAvailable(Session session) {
-        Set<Session> availableSessions = this.app.getAppSession().getAvailableSessions();
-
-        if (availableSessions.contains(session)) {
-            return true;
-        }
-
-        return false;
     }
 
     public void broadcast(JsonObject output) {

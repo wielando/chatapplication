@@ -55,5 +55,13 @@ public class AppSession {
         }
     }
 
+    public boolean isSessionAvailable(Session session) {
+        if (AppSession.availableSessions.contains(session)) {
+            return true;
+        }
+
+        return false;
+    }
+
 
 }
