@@ -20,7 +20,7 @@ public class ServerAction {
     public ServerAction(App app) {
         this.app = app;
 
-        this.client = this.app.getClient();
+        this.client = this.app.getCurrentClient();
     }
 
     public void sendTextMessageToClientPartner(String textMessage, Client clientPartner) throws Exception {
@@ -28,7 +28,8 @@ public class ServerAction {
             return;
         }
 
-        Session clientPartnerSession = this.app.getClientSessionsHashMap().get(clientPartner);
+        Integer partnerId = clientPartner.getClientInfo().getId();
+        Session clientPartnerSession = this.app.getAppSession().getClientSession(partnerId).get(clientPartner);
 
         if (this.isSessionAvailable(clientPartnerSession)) {
 
@@ -40,7 +41,7 @@ public class ServerAction {
     }
 
     public void sendMessageToClient(JSONObject jsonObject, Client client) throws Exception {
-        Session clientSession = this.app.getClientSessionsHashMap().get(client);
+        Session clientSession = this.app.getAppSession().getClientSession(client.getClientInfo().getId()).get(client);
 
         if (this.isSessionAvailable(clientSession)) {
             this.broadcastToSession(clientSession, jsonObject);
@@ -59,7 +60,7 @@ public class ServerAction {
     }
 
     private boolean isSessionAvailable(Session session) {
-        Set<Session> availableSessions = this.app.getSessions();
+        Set<Session> availableSessions = this.app.getAppSession().getAvailableSessions();
 
         if (availableSessions.contains(session)) {
             return true;
@@ -69,7 +70,7 @@ public class ServerAction {
     }
 
     public void broadcast(JsonObject output) {
-        Set<Session> AppSessions = this.app.getSessions();
+        Set<Session> AppSessions = this.app.getAppSession().getAvailableSessions();
 
         for (Session session : AppSessions) {
             synchronized (session) {
