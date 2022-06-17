@@ -1,5 +1,6 @@
 package ChatWebSocket.Database;
 
+import ChatWebSocket.App;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.SQLException;
@@ -9,7 +10,7 @@ public class Database {
     private DatabasePool databasePool;
     private HikariDataSource dataSource;
 
-    public Database() {
+    public Database(App app) {
 
         boolean SQLException = false;
 
@@ -36,10 +37,6 @@ public class Database {
 
     public HikariDataSource getDataSource() {
         return this.dataSource;
-    }
-
-    public DatabasePool getDatabasePool() {
-        return this.databasePool;
     }
 
     public void dispose() throws SQLException {

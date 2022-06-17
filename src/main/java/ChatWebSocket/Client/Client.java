@@ -1,6 +1,6 @@
 package ChatWebSocket.Client;
 
-import ChatWebSocket.ChatApp;
+import ChatWebSocket.App;
 import ChatWebSocket.Database.Database;
 import ChatWebSocket.ServerAction;
 
@@ -13,21 +13,21 @@ import java.util.List;
 public class Client {
 
     private ClientInfo clientInfo;
+    private App app;
 
-    public Client(String token) throws SQLException {
+    public Client(String token, App app) throws SQLException {
         String dummyToken = "SLK2"; // only test purpose!
+        this.app = app;
 
         this.clientInfo = this.loadClientInfo(token);
     }
 
     private ClientInfo loadClientInfo(String token) throws SQLException {
-
         ClientInfo info = null;
 
         String statement = "SELECT id, username, avatarUrl, online FROM users WHERE token = ?";
-        Database connection = new Database();
 
-        try (PreparedStatement queryStmt = connection.getDataSource().getConnection().prepareStatement(statement)) {
+        try (PreparedStatement queryStmt = this.app.getDatabase().getDataSource().getConnection().prepareStatement(statement)) {
             queryStmt.setString(1, token);
 
             try (ResultSet set = queryStmt.executeQuery()) {
@@ -52,11 +52,9 @@ public class Client {
             return;
         }
 
-        Database connection = new Database();
-
         String statement = "SELECT friend_ids FROM friendlist WHERE user_id = ?";
 
-        try (PreparedStatement queryStmt = connection.getDataSource().getConnection().prepareStatement(statement)) {
+        try (PreparedStatement queryStmt = this.app.getDatabase().getDataSource().getConnection().prepareStatement(statement)) {
             queryStmt.setInt(1, this.getClientInfo().getId());
 
             try (ResultSet set = queryStmt.executeQuery()) {
@@ -75,15 +73,13 @@ public class Client {
     }
 
     private HashMap<String, HashMap<String, String>> createFriendList(List<String> friendIds) {
-
-        Database connection = new Database();
         String statement = "SELECT * FROM users WHERE id = ?";
 
         HashMap<String, HashMap<String, String>> friendList = new HashMap<>();
 
         for (String friendId : friendIds) {
 
-            try (PreparedStatement queryStmt = connection.getDataSource().getConnection().prepareStatement(statement)) {
+            try (PreparedStatement queryStmt = this.app.getDatabase().getDataSource().getConnection().prepareStatement(statement)) {
                 queryStmt.setInt(1, Integer.parseInt(friendId));
 
                 try (ResultSet set = queryStmt.executeQuery()) {
@@ -107,21 +103,19 @@ public class Client {
     }
 
     public Client loadClientPartner(int id) throws Exception {
-
         Integer partnerId = id;
 
         if (partnerId.equals(this.clientInfo.getId())) {
             return null;
         }
 
-        Database connection = new Database();
         String statement = "SELECT token FROM users WHERE id = ?";
 
-        try (PreparedStatement queryStmt = connection.getDataSource().getConnection().prepareStatement(statement)) {
+        try (PreparedStatement queryStmt = this.app.getDatabase().getDataSource().getConnection().prepareStatement(statement)) {
             queryStmt.setInt(1, id);
             try (ResultSet set = queryStmt.executeQuery()) {
                 if (set.next()) {
-                    return new Client(set.getString("token"));
+                    return new Client(set.getString("token"), this.app);
                 }
             }
         } catch (Exception e) {
@@ -132,11 +126,7 @@ public class Client {
     }
 
     public void TextMessageToUser(Client clientPartner, String textMessage) throws Exception {
-        this.serverAction.sendTextMessageToClientPartner(textMessage, clientPartner);
-    }
-
-    public ServerAction getServerAction() {
-        return this.serverAction;
+        this.app.getServerAction().sendTextMessageToClientPartner(textMessage, clientPartner);
     }
 
     public ClientInfo getClientInfo() {
