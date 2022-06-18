@@ -14,9 +14,9 @@ public class SingleChatRoomFactory {
     protected Client clientPartner = null;
 
     private boolean isCreateable = false;
-    private App app = null;
+    protected App app = null;
 
-    Set<Integer> clientPartnerId = null;
+    private Set<Integer> clientPartnerIds = null;
 
     protected SingleChatRoomFactory() {
     }
@@ -36,9 +36,16 @@ public class SingleChatRoomFactory {
     }
 
     public SingleChatRoom createSingleChatRoom(Client clientPartner) {
-        if (!isCreateable) return null;
+        if (!this.isClientPartnerAvailable(clientPartner)) return null;
 
         return new SingleChatRoom();
+    }
+
+    private boolean isClientPartnerAvailable(Client clientPartner) {
+        if (this.clientPartnerIds == null) return false;
+        if (this.client.getClientInfo().getId().equals(this.clientPartner.getClientInfo().getId())) return false;
+
+        return this.clientPartnerIds.contains(clientPartner.getClientInfo().getId());
     }
 
     private void setClientPartnerId() throws Exception {
@@ -55,7 +62,7 @@ public class SingleChatRoomFactory {
                 continue;
             }
 
-            this.clientPartnerId.add(clientId);
+            this.clientPartnerIds.add(clientId);
         }
 
     }
