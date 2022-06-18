@@ -2,7 +2,7 @@ package ChatWebSocket.Messages;
 
 import ChatWebSocket.App;
 import ChatWebSocket.Client.Client;
-import ChatWebSocket.Messages.User.GetUserChatChannels;
+import ChatWebSocket.Messages.User.GetUserFriendList;
 import ChatWebSocket.Messages.User.PostUserMessage;
 import jakarta.json.JsonObject;
 
@@ -62,7 +62,7 @@ public class MessageRegistry {
     }
 
     private void registerInitialMessages() {
-        this.registerHandler(Packets.GetUserChatChannels, GetUserChatChannels.class);
+        this.registerHandler(Packets.GetUserFriendList, GetUserFriendList.class);
     }
 
     private void registerUserMessages() {

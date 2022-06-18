@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GetUserChatChannels extends MessageHandler {
+public class GetUserFriendList extends MessageHandler {
     @Override
     public void handle() throws Exception {
         this.client.loadClientFriendList();
