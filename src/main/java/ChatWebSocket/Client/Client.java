@@ -16,7 +16,6 @@ public class Client {
     private App app;
 
     public Client(String token, App app) throws SQLException {
-        String dummyToken = "SLK2"; // only test purpose!
         this.app = app;
 
         this.clientInfo = this.loadClientInfo(token);

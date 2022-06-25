@@ -1,26 +1,48 @@
 package ChatWebSocket.Chat;
 
+import ChatWebSocket.App;
+import ChatWebSocket.Client.Client;
+import org.json.JSONObject;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class SingleChatRoom extends SingleChatRoomFactory {
+public class SingleChatRoom {
 
-    private final HashMap<String, String> chatMessages = new HashMap<>();
+    private ArrayList<ArrayList<Object>> conversationList;
+    private Integer roomId;
 
-    protected SingleChatRoom() {
-        super();
+    private Client client;
+    private Client clientPartner;
+    private App app;
+
+    private SingleChatRoom(Client client, Client clientPartner, App app) throws SQLException {
+        this.client = client;
+        this.clientPartner = clientPartner;
+        this.app = app;
+
+        this.loadChatMessages();
+        this.sendRoomDataToClient();
+    }
+
+    public static SingleChatRoom initSingleChatRoom(SingleChatRoomFactory factory) throws SQLException {
+        return new SingleChatRoom(factory.client, factory.clientPartner, factory.app);
     }
 
     private void loadChatMessages() throws SQLException {
         Integer clientId = this.client.getClientInfo().getId();
         Integer clientPartnerId = this.clientPartner.getClientInfo().getId();
 
-        String statement = "SELECT u.username, cm.message, cm.timestamp FROM chat_messages AS cm " +
+        String statement = "SELECT u.username, cm.message, cm.timestamp, cm.liked FROM chat_messages AS cm " +
                 "LEFT JOIN users AS u ON cm.from_userid = u.id " +
                 "WHERE cm.from_userid = ? AND cm.to_userid = ? " +
-                "OR cm.from_userid = ? AND cm.to_userid = ?" +
+                "OR cm.from_userid = ? AND cm.to_userid = ? " +
                 "ORDER BY cm.timestamp";
 
         try (PreparedStatement queryStmt = this.app.getDatabase().getDataSource().getConnection().prepareStatement(statement)) {
@@ -30,10 +52,40 @@ public class SingleChatRoom extends SingleChatRoomFactory {
             queryStmt.setInt(4, clientId);
 
             try (ResultSet set = queryStmt.executeQuery()) {
+                ResultSetMetaData resultSetMetaData = set.getMetaData();
+                int columnCount = resultSetMetaData.getColumnCount();
+
+                this.conversationList = new ArrayList<>(columnCount);
+
+                for (int i = 0; i < columnCount; i++) {
+                    this.conversationList.add(new ArrayList<>());
+                }
+
+                int conversationCount = 0;
+
                 while (set.next()) {
-                    chatMessages.put(set.getString("username"), set.getString("message"));
+                    this.conversationList.get(conversationCount).add(set.getString("username"));
+                    this.conversationList.get(conversationCount).add(set.getString("message"));
+                    this.conversationList.get(conversationCount).add(set.getInt("liked"));
+                    this.conversationList.get(conversationCount).add(set.getInt("timestamp"));
+
+                    conversationCount++;
                 }
             }
+        }
+
+    }
+
+    public void sendRoomDataToClient() {
+        JSONObject conversationData = new JSONObject();
+        JSONObject objectHeader = new JSONObject();
+
+        for (ArrayList<Object> conversation : this.conversationList) {
+            conversationData.put("username", conversation.get(0));
+            conversationData.put("message", conversation.get(1));
+            conversationData.put("liked", conversation.get(2));
+
+            objectHeader.put(conversation.get(3).toString(), conversationData);
         }
 
     }

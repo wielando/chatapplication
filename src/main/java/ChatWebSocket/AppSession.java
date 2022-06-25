@@ -4,6 +4,7 @@ import ChatWebSocket.Client.Client;
 import jakarta.websocket.Session;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ public class AppSession {
 
     private static Session currentSession = null;
     private static final HashMap<Integer, HashMap<Client, Session>> clientSessionsHashMap = new HashMap<>();
-    private static Set<Session> availableSessions;
+    private static Set<Session> availableSessions = new HashSet<>();
 
 
     private AppSession(App app) {

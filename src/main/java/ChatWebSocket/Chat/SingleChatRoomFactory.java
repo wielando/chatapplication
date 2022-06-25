@@ -4,41 +4,31 @@ import ChatWebSocket.App;
 import ChatWebSocket.Client.Client;
 import jakarta.jms.Session;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class SingleChatRoomFactory {
 
-    protected Client client = null;
-    protected Client clientPartner = null;
+    public Client client = null;
+    public Client clientPartner = null;
+    public App app = null;
 
-    private boolean isCreateable = false;
-    protected App app = null;
+    public Set<Integer> clientPartnerIds = null;
 
-    private Set<Integer> clientPartnerIds = null;
-
-    protected SingleChatRoomFactory() {
-    }
-
-    public static SingleChatRoomFactory createSingleChatRoomFactory(Client client, App app) throws Exception {
-        SingleChatRoomFactory factory = new SingleChatRoomFactory();
-
-        return factory.buildFactoryConfiguration(client, app);
-    }
-
-    private SingleChatRoomFactory buildFactoryConfiguration(Client client, App app) throws Exception {
-        this.client = client;
-        this.app = app;
-        this.setClientPartnerId();
-
-        return new SingleChatRoomFactory();
-    }
-
-    public SingleChatRoom createSingleChatRoom(Client clientPartner) {
+    public SingleChatRoom createSingleChatRoom(Client client, Client clientPartner, App app) throws Exception {
+        this.setConfiguration(client, clientPartner, app);
         if (!this.isClientPartnerAvailable(clientPartner)) return null;
 
-        return new SingleChatRoom();
+        return SingleChatRoom.initSingleChatRoom(this);
+    }
+
+    private void setConfiguration(Client client, Client clientPartner, App app) throws Exception {
+        this.client = client;
+        this.clientPartner = clientPartner;
+        this.app = app;
+        this.setClientPartnerId();
     }
 
     private boolean isClientPartnerAvailable(Client clientPartner) {

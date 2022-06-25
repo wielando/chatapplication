@@ -12,8 +12,9 @@ public class ClientInfo {
     private int online;
     private Integer id;
     private String avatarUrl;
+    private Integer roomId;
 
-    private HashMap<String, HashMap<String, String>> partnerList;
+    private HashMap<String, HashMap<String, String>> partnerList = new HashMap<>();
 
     public ClientInfo(ResultSet set) throws SQLException {
         try {
@@ -51,6 +52,10 @@ public class ClientInfo {
         this.avatarUrl = avatarUrl;
     }
 
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
+    }
+
     public String getUsername() {
         return this.username;
     }
@@ -61,5 +66,9 @@ public class ClientInfo {
 
     public String getAvatarUrl() {
         return this.avatarUrl;
+    }
+
+    public Integer getRoomId() {
+        return this.roomId;
     }
 }
