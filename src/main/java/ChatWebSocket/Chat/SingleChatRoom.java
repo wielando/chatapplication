@@ -2,6 +2,7 @@ package ChatWebSocket.Chat;
 
 import ChatWebSocket.App;
 import ChatWebSocket.Client.Client;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.PreparedStatement;
@@ -22,7 +23,7 @@ public class SingleChatRoom {
     private Client clientPartner;
     private App app;
 
-    private SingleChatRoom(Client client, Client clientPartner, App app) throws SQLException {
+    private SingleChatRoom(Client client, Client clientPartner, App app) throws Exception {
         this.client = client;
         this.clientPartner = clientPartner;
         this.app = app;
@@ -31,7 +32,7 @@ public class SingleChatRoom {
         this.sendRoomDataToClient();
     }
 
-    public static SingleChatRoom initSingleChatRoom(SingleChatRoomFactory factory) throws SQLException {
+    public static SingleChatRoom initSingleChatRoom(SingleChatRoomFactory factory) throws Exception {
         return new SingleChatRoom(factory.client, factory.clientPartner, factory.app);
     }
 
@@ -76,18 +77,28 @@ public class SingleChatRoom {
 
     }
 
-    public void sendRoomDataToClient() {
-        JSONObject conversationData = new JSONObject();
-        JSONObject objectHeader = new JSONObject();
+    public void sendRoomDataToClient() throws Exception {
 
-        for (ArrayList<Object> conversation : this.conversationList) {
-            conversationData.put("username", conversation.get(0));
-            conversationData.put("message", conversation.get(1));
-            conversationData.put("liked", conversation.get(2));
+        JSONObject conversationHeader = new JSONObject();
+        ArrayList<JSONObject> conversationData = new ArrayList<>(this.conversationList.size());
 
-            objectHeader.put(conversation.get(3).toString(), conversationData);
+        for(int i = 0; i < this.conversationList.size(); i++) {
+            conversationData.add(new JSONObject());
         }
 
+        int conversationDataCount = 0;
+
+        for(ArrayList<Object> conversation : this.conversationList) {
+            conversationData.get(conversationDataCount).put("username", conversation.get(0));
+            conversationData.get(conversationDataCount).put("message", conversation.get(1));
+            conversationData.get(conversationDataCount).put("liked", conversation.get(2));
+            conversationData.get(conversationDataCount).put("timestamp", conversation.get(3));
+
+            conversationDataCount++;
+        }
+
+        conversationHeader.put("messages", conversationData);
+        this.app.getServerAction().sendMessageToClient(conversationHeader, this.client);
     }
 
 }

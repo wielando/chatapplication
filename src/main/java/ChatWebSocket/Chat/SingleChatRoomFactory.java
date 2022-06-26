@@ -19,7 +19,7 @@ public class SingleChatRoomFactory {
 
     public SingleChatRoom createSingleChatRoom(Client client, Client clientPartner, App app) throws Exception {
         this.setConfiguration(client, clientPartner, app);
-        if (!this.isClientPartnerAvailable(clientPartner)) return null;
+        //if (!this.isClientPartnerAvailable(clientPartner)) return null;
 
         return SingleChatRoom.initSingleChatRoom(this);
     }
