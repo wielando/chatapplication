@@ -63,10 +63,6 @@ public class SingleChatRoom {
         }
     }
 
-    public Integer getRoomId() {
-        return this.roomId;
-    }
-
     private void setRoomId() throws Exception {
         if (this.roomId != null) return;
         this.createRoomId();
@@ -154,4 +150,7 @@ public class SingleChatRoom {
         this.app.getServerAction().sendMessageToClient(conversationHeader, this.client);
     }
 
+    public Integer getRoomId() {
+        return this.roomId;
+    }
 }
