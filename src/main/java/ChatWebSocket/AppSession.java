@@ -1,11 +1,11 @@
 package ChatWebSocket;
 
+import ChatWebSocket.Chat.SingleChatRoom;
 import ChatWebSocket.Client.Client;
 import jakarta.websocket.Session;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class AppSession {
@@ -13,6 +13,8 @@ public class AppSession {
     private static Session currentSession = null;
     private static final HashMap<Integer, HashMap<Client, Session>> clientSessionsHashMap = new HashMap<>();
     private static Set<Session> availableSessions = new HashSet<>();
+
+    private static HashMap<Session, HashMap<Integer, SingleChatRoom>> activeRoomList = new HashMap<>();
 
 
     private AppSession(App app) {
@@ -27,6 +29,20 @@ public class AppSession {
 
         AppSession.currentSession = currentSession;
         this.addSessionInList(currentSession);
+    }
+
+    public boolean addRoomToSession(Session session, SingleChatRoom room) {
+        if (!this.isSessionAvailable(session)) return false;
+
+        if (!AppSession.activeRoomList.containsKey(session)) {
+            HashMap<Integer, SingleChatRoom> roomInfo = new HashMap<>();
+            roomInfo.put(room.getRoomId(), room);
+
+            AppSession.activeRoomList.put(session, roomInfo);
+            return true;
+        }
+
+        return false;
     }
 
     public void addSessionInList(Session session) {

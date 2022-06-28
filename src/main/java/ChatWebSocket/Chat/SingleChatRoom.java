@@ -2,6 +2,7 @@ package ChatWebSocket.Chat;
 
 import ChatWebSocket.App;
 import ChatWebSocket.Client.Client;
+import jakarta.websocket.Session;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,8 +18,8 @@ import java.util.Map;
 public class SingleChatRoom {
 
     private ArrayList<ArrayList<Object>> conversationList;
-    private Integer roomId;
 
+    private Integer roomId;
     private Client client;
     private Client clientPartner;
     private App app;
@@ -28,12 +29,64 @@ public class SingleChatRoom {
         this.clientPartner = clientPartner;
         this.app = app;
 
-        this.loadChatMessages();
-        this.sendRoomDataToClient();
+        this.setRoomId();
+
+        if (this.roomId != null) {
+            this.loadChatMessages();
+            this.sendRoomDataToClient();
+        }
     }
 
     public static SingleChatRoom initSingleChatRoom(SingleChatRoomFactory factory) throws Exception {
         return new SingleChatRoom(factory.client, factory.clientPartner, factory.app);
+    }
+
+    private void createRoomId() throws SQLException {
+        String statement = "SELECT * FROM active_rooms as ar " +
+                "WHERE ar.user_id = ? " +
+                "LIMIT 1";
+
+        try (PreparedStatement queryStmt = this.app.getDatabase().getDataSource().getConnection().prepareStatement(statement)) {
+            queryStmt.setInt(1, this.client.getClientInfo().getId());
+
+            try (ResultSet set = queryStmt.executeQuery()) {
+                if (set.next()) return;
+
+                String insertStatement = "INSERT INTO active_rooms (user_id) VALUES(?)";
+
+                try (PreparedStatement queryInsertStmt = this.app.getDatabase().getDataSource().getConnection().prepareStatement(insertStatement)) {
+                    queryInsertStmt.setInt(1, this.client.getClientInfo().getId());
+                    queryInsertStmt.executeQuery();
+                }
+            }
+
+        }
+    }
+
+    public Integer getRoomId() {
+        return this.roomId;
+    }
+
+    private void setRoomId() throws Exception {
+        if (this.roomId != null) return;
+        this.createRoomId();
+
+        String statement = "SELECT * FROM active_rooms as ar " +
+                "WHERE ar.user_id = ? " +
+                "LIMIT 1";
+
+        try (PreparedStatement queryStmt = this.app.getDatabase().getDataSource().getConnection().prepareStatement(statement)) {
+            queryStmt.setInt(1, this.client.getClientInfo().getId());
+
+            try (ResultSet set = queryStmt.executeQuery()) {
+                if (set.next()) {
+                    this.roomId = set.getInt("id");
+
+                    Session clientSession = this.app.getAppSession().getClientSession(this.client.getClientInfo().getId()).get(this.client);
+                    this.app.getAppSession().addRoomToSession(clientSession, this);
+                }
+            }
+        }
     }
 
     private void loadChatMessages() throws SQLException {
@@ -82,13 +135,13 @@ public class SingleChatRoom {
         JSONObject conversationHeader = new JSONObject();
         ArrayList<JSONObject> conversationData = new ArrayList<>(this.conversationList.size());
 
-        for(int i = 0; i < this.conversationList.size(); i++) {
+        for (int i = 0; i < this.conversationList.size(); i++) {
             conversationData.add(new JSONObject());
         }
 
         int conversationDataCount = 0;
 
-        for(ArrayList<Object> conversation : this.conversationList) {
+        for (ArrayList<Object> conversation : this.conversationList) {
             conversationData.get(conversationDataCount).put("username", conversation.get(0));
             conversationData.get(conversationDataCount).put("message", conversation.get(1));
             conversationData.get(conversationDataCount).put("liked", conversation.get(2));

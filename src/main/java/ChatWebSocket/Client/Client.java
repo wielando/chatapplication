@@ -1,6 +1,7 @@
 package ChatWebSocket.Client;
 
 import ChatWebSocket.App;
+import ChatWebSocket.Chat.SingleChatRoom;
 import ChatWebSocket.Database.Database;
 import ChatWebSocket.ServerAction;
 
@@ -43,6 +44,10 @@ public class Client {
         }
 
         return null;
+    }
+
+    public void addRoom(SingleChatRoom room) {
+
     }
 
     public void loadClientFriendList() {
